@@ -1,6 +1,6 @@
 --- STEAMODDED HEADER
---- MOD_NAME: Animated Jokers
---- MOD_ID: AnimatedJokers
+--- MOD_NAME: Aura
+--- MOD_ID: Aura
 --- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
@@ -10,6 +10,7 @@ AnimatedJokers = {
     j_wrathful_joker = {frames_per_row = 1, frames = 18},
     j_greedy_joker = {frames = 12},
     j_gluttenous_joker = {frames = 12},
+    --j_lusty_joker = {frames = 18}, (bugged spritesheet)
     j_raised_fist = {frames_per_row = 4, frames = 14}
 }
 
