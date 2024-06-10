@@ -4,13 +4,13 @@
 --- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.0.004
+--- VERSION: 0.0.005
 
 AnimatedJokers = {
     j_wrathful_joker = {frames_per_row = 1, frames = 18},
     j_greedy_joker = {frames = 12},
     j_gluttenous_joker = {frames = 12},
-    --j_lusty_joker = {frames = 18}, (bugged spritesheet)
+    j_lusty_joker = {frames_per_row = 5, frames = 20},
     j_raised_fist = {frames_per_row = 4, frames = 14}
 }
 
