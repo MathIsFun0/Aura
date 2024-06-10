@@ -1,13 +1,16 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Animated Jokers
 --- MOD_ID: AnimatedJokers
---- MOD_AUTHOR: [MathIsFun_, Bard (pearl)]
+--- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.0.001
+--- VERSION: 0.0.004
 
 AnimatedJokers = {
-    j_wrathful_joker = {frames_per_row = 1, frames = 18}
+    j_wrathful_joker = {frames_per_row = 1, frames = 18},
+    j_greedy_joker = {frames = 12},
+    j_gluttenous_joker = {frames = 12},
+    j_raised_fist = {frames_per_row = 4, frames = 14}
 }
 
 --Register all Jokers/Sprites
@@ -38,11 +41,11 @@ function Game:update(dt)
         for k, v in pairs(AnimatedJokers) do
             local obj = G.P_CENTERS[k]
             if obj then
-                local loc = obj.pos.y*AnimatedJokers[k].frames_per_row+obj.pos.x
+                local loc = obj.pos.y*(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames)+obj.pos.x
                 loc = loc + 1
                 if loc >= AnimatedJokers[k].frames then loc = 0 end
-                obj.pos.x = loc%AnimatedJokers[k].frames_per_row
-                obj.pos.y = loc/AnimatedJokers[k].frames_per_row
+                obj.pos.x = loc%(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames)
+                obj.pos.y = math.floor(loc/(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames))
             end
         end
     end
