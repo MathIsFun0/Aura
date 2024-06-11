@@ -1,7 +1,7 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Aura
 --- MOD_ID: Aura
---- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy, RattlingSnow353]
+--- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard (pearl), Grassy, RattlingSnow353]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
 --- VERSION: 0.008a
