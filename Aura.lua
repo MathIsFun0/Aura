@@ -1,18 +1,23 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Aura
 --- MOD_ID: Aura
---- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy]
+--- MOD_AUTHOR: [MathIsFun_, Bard (pearl), Grassy, RattlingSnow353]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.0.005
+--- VERSION: 0.0.008
 
 AnimatedJokers = {
     j_wrathful_joker = {frames_per_row = 1, frames = 18},
     j_greedy_joker = {frames = 12},
     j_gluttenous_joker = {frames = 12},
     j_lusty_joker = {frames_per_row = 5, frames = 20},
-    j_raised_fist = {frames_per_row = 4, frames = 14}
+    j_raised_fist = {frames_per_row = 4, frames = 14},
+    j_faceless = {frames_per_row = 4, frames = 24},
+    j_flower_pot = {frames = 24},
+    j_red_card = {frames_per_row = 19, frames = 349}
 }
+
+print(tprint(love.graphics.getSystemLimits( )))
 
 --Register all Jokers/Sprites
 for k, v in pairs(AnimatedJokers) do
