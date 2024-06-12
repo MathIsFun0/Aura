@@ -1,0 +1,21 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# Prevent crashes on getting stake sticker
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "for k, v in pairs(G.P_JOKER_RARITY_POOLS[4]) do"
+position = "after"
+payload = "if type(v) == 'table' and v.key then"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "r_tally = r_tally + 1"
+position = "after"
+payload = "end"
+match_indent = true
