@@ -77,7 +77,7 @@ AnimatedJokers = {
     j_vampire = {},
     j_shortcut = {},
     j_hologram = {},
-    j_vagabond = {},
+    j_vagabond = { frames = 30, fps = 5 },
     j_baron = {},
     j_cloud_9 = {},
     j_rocket = {},
@@ -228,38 +228,48 @@ end
 
 --Update animated sprites
 local upd = Game.update
-AnimatedJokersDT = 0
 
-function Game:update(dt)
-    upd(self,dt)
-    AnimatedJokersDT = AnimatedJokersDT + dt
-    if AnimatedJokersDT > 0.1 then
-        AnimatedJokersDT = AnimatedJokersDT - 0.1
-        for k, v in pairs(AnimatedJokers) do
-            if v.frames then
-                if not AnimatedJokers[k].individual then
-                    local obj = G.P_CENTERS[k]
-                    if obj then
-                        local loc = obj.pos.y*(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames)+obj.pos.x
-                        loc = loc + 1
-                        if loc >= AnimatedJokers[k].frames then loc = 0 end
-                        obj.pos.x = loc%(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames)
-                        obj.pos.y = math.floor(loc/(AnimatedJokers[k].frames_per_row or AnimatedJokers[k].frames))
-                    end
+function Aura.update_frame(dt, k, obj, jkr)
+    if AnimatedJokers[k] and obj and (AnimatedJokers[k].frames or AnimatedJokers[k].individual) then
+        local next_frame = false
+        local anim = AnimatedJokers[k]
+        if anim.individual then
+            if jkr then
+                if not jkr.animation then jkr.animation = {} end
+                if not jkr.animation.t then jkr.animation.t = 0 end
+                jkr.animation.t = jkr.animation.t + dt
+                if jkr.animation.t > 1/(jkr.animation.fps or 10) then
+                    jkr.animation.t = jkr.animation.t - 1/(jkr.animation.fps or 10)
+                    next_frame = true
                 end
             end
+        else
+            if not anim.t then anim.t = 0 end
+            anim.t = anim.t + dt
+            if anim.t > 1/(anim.fps or 10) then
+                anim.t = anim.t - 1/(anim.fps or 10)
+                next_frame = true
+            end
         end
-        for _, v in pairs(AnimatedIndividuals) do
-            local obj = v.config.center
-            local anim = AnimatedJokers[v.config.center_key]
+        if next_frame then
             local loc = obj.pos.y*(anim.frames_per_row or anim.frames)+obj.pos.x
-            if v.animation and v.animation.target and loc ~= v.animation.target then
+            if (not anim.individual) or (jkr and jkr.animation.target and loc ~= jkr.animation.target) then
                 loc = loc + 1
             end
             if loc >= anim.frames then loc = 0 end
             obj.pos.x = loc%(anim.frames_per_row or anim.frames)
             obj.pos.y = math.floor(loc/(anim.frames_per_row or anim.frames))
         end
+    end
+end
+
+function Game:update(dt)
+    upd(self,dt)
+    for k, v in pairs(AnimatedJokers) do
+        Aura.update_frame(dt, k, G.P_CENTERS[k])
+    end
+    for _, v in pairs(AnimatedIndividuals) do
+        Aura.update_frame(dt, v.config.center_key, v.config.center, v)
     end
 end
 

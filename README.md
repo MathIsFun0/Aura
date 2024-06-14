@@ -1,7 +1,7 @@
 # Aura
 Aura is a mod that seeks to add animations to every Joker in Balatro.
 
-**10/150** Jokers completed
+**11/150** Jokers completed
 
 Known Issues:
 - Jokers don't naturally generate properly when using Steamodded 0.9.8
