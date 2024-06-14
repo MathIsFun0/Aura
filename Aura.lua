@@ -4,7 +4,7 @@
 --- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard (pearl), Grassy, RattlingSnow353]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.010a
+--- VERSION: 0.012
 
 AnimatedJokers = {
     j_joker = {},
@@ -31,7 +31,7 @@ AnimatedJokers = {
     j_banner = {},
     j_mystic_summit = {},
     j_marble = {},
-    j_loyalty_card = {},
+    j_loyalty_cfard = {},
     j_8_ball = {},
     j_misprint = {},
     j_dusk = {},
@@ -109,7 +109,7 @@ AnimatedJokers = {
     j_ramen = {},
     j_walkie_talkie = {},
     j_selzer = {},
-    j_castle = {},
+    j_castle = { frames = 69, extra = { frames_per_row = 5, frames = 5, fps = 5, start_frame = 0 } },
     j_smiley = {},
     j_campfire = {},
     j_ticket = {},
@@ -161,6 +161,7 @@ AnimatedJokers = {
 AnimatedIndividuals = {}
 
 Aura = {}
+Aura.LayeredCards = {}
 function Aura.add_individual(card)
     if not card.animated then
         AnimatedIndividuals[#AnimatedIndividuals+1] = card
@@ -188,13 +189,22 @@ if not SMODS["INIT"] then
                 px = v.px or 71,
                 py = v.py or 95
             }
+            if v.extra then
+                SMODS.Atlas {
+                    key = k.."_extra",
+                    path = k .. "_extra.png",
+                    px = v.px or 71,
+                    py = v.py or 95
+                }
+            end
             --joker override
             SMODS[v.set or "Joker"]:take_ownership(k, {
                 atlas = k,
-                pos = { x = 0, y = 0 }
+                pos = { x = 0, y = 0, extra = v.extra and {x = 0, y = 0} },
+                extra_atlas = v.extra and "aura_"..k.."_extra",
             })
         else
-            SMODS[v.set or "Joker"]:take_ownership(k,{},true)
+            SMODS[v and v.set or "Joker"]:take_ownership(k,{},true)
         end
     end
 else
@@ -209,6 +219,7 @@ else
             --joker override
             SMODS[v.set or "Joker"]:take_ownership(k):register()
             --sprite
+            --todo: add extra layer, waiting unitl 0.9.8 compat is fixed
             if v.frames then
                 SMODS.Sprite:new(
                     k,
@@ -232,6 +243,7 @@ local upd = Game.update
 function Aura.update_frame(dt, k, obj, jkr)
     if AnimatedJokers[k] and obj and (AnimatedJokers[k].frames or AnimatedJokers[k].individual) then
         local next_frame = false
+        local next_frame_extra = false
         local anim = AnimatedJokers[k]
         if anim.individual then
             if jkr then
@@ -242,6 +254,14 @@ function Aura.update_frame(dt, k, obj, jkr)
                     jkr.animation.t = jkr.animation.t - 1/(jkr.animation.fps or 10)
                     next_frame = true
                 end
+                if jkr.animation.extra then
+                    if not jkr.animation.extra.t then jkr.animation.extra.t = 0 end
+                    jkr.animation.extra.t = jkr.animation.extra.t + dt
+                    if jkr.animation.extra.t > 1/(jkr.animation.extra.fps or 10) then
+                        jkr.animation.extra.t = jkr.animation.extra.t - 1/(jkr.animation.extra.fps or 10)
+                        next_frame_extra = true
+                    end
+                end
             end
         else
             if not anim.t then anim.t = 0 end
@@ -250,15 +270,32 @@ function Aura.update_frame(dt, k, obj, jkr)
                 anim.t = anim.t - 1/(anim.fps or 10)
                 next_frame = true
             end
+            if anim.extra then
+                if not anim.extra.t then anim.extra.t = 0 end
+                anim.extra.t = anim.extra.t + dt
+                if anim.extra.t > 1/(anim.extra.fps or 10) then
+                    anim.extra.t = anim.extra.t - 1/(anim.extra.fps or 10)
+                    next_frame_extra = true
+                end
+            end
         end
         if next_frame then
             local loc = obj.pos.y*(anim.frames_per_row or anim.frames)+obj.pos.x
             if (not anim.individual) or (jkr and jkr.animation.target and loc ~= jkr.animation.target) then
                 loc = loc + 1
             end
-            if loc >= anim.frames then loc = 0 end
+            if loc >= anim.frames then loc = anim.start_frame or 0 end
             obj.pos.x = loc%(anim.frames_per_row or anim.frames)
             obj.pos.y = math.floor(loc/(anim.frames_per_row or anim.frames))
+        end
+        if next_frame_extra then
+            local loc = obj.pos.extra.y*(anim.extra.frames_per_row or anim.extra.frames)+obj.pos.extra.x
+            if (not anim.individual) or (jkr and jkr.animation.extra and jkr.animation.extra.target and loc ~= jkr.animation.extra.target) then
+                loc = loc + 1
+            end
+            if loc >= anim.extra.frames then loc = anim.extra.start_frame or 0 end
+            obj.pos.extra.x = loc%(anim.extra.frames_per_row or anim.extra.frames)
+            obj.pos.extra.y = math.floor(loc/(anim.extra.frames_per_row or anim.extra.frames))
         end
     end
 end
@@ -290,4 +327,49 @@ function Node:stop_drag()
         Aura.add_individual(self)
         self.animation = {target = 0}
     end
+end
+
+--Sprite setting for multiple layers
+local css = Card.set_sprites
+function Card:set_sprites(c, f)
+    css(self, c,f)
+    if self.config.center and self.config.center.extra_atlas then
+        if not self.children.center2 then
+            self.children.center2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.extra_atlas], self.config.center.pos.extra)
+            self.children.center2.role.draw_major = self
+            self.children.center2.states.hover.can = false
+            self.children.center2.states.click.can = false
+        else
+            self.children.center2:set_sprite_pos(self.config.center.pos.extra)
+        end
+    end
+end
+local cd = Card.draw
+function Card:draw(layer)
+    if self.config and self.config.center and self.config.center.extra_atlas then self:set_sprites() end
+    cd(self,layer)
+end
+
+--Castle
+function Aura.castle_suit_num(suit)
+    if (suit == "Spades") then return 0 end
+    if (suit == "Hearts") then return 5 end
+    if (suit == "Clubs") then return 10 end
+    if (suit == "Diamonds") then return 15 end
+    return 20
+end
+local rcc = reset_castle_card
+function reset_castle_card(dont_reset)
+    if not dont_reset then rcc() end
+    local new_suit = G.GAME.current_round.castle_card.suit or 'Spades'
+    local anim_offset = Aura.castle_suit_num(new_suit)
+    AnimatedJokers.j_castle.extra.frames = anim_offset+5
+    AnimatedJokers.j_castle.extra.start_frame = anim_offset
+    G.P_CENTERS["j_castle"].pos.extra.y = anim_offset/5
+end
+local gsr = Game.start_run
+function Game:start_run(args)
+    --don't mess up on save load
+    gsr(self,args)
+    reset_castle_card(true)
 end
