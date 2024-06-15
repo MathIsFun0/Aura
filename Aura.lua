@@ -200,8 +200,7 @@ if not SMODS["INIT"] then
             --joker override
             SMODS[v.set or "Joker"]:take_ownership(k, {
                 atlas = k,
-                pos = { x = 0, y = 0, extra = v.extra and {x = 0, y = 0} },
-                extra_atlas = v.extra and "aura_"..k.."_extra",
+                pos = { x = 0, y = 0, extra = v.extra and {x = 0, y = 0, atlas = "aura_"..k.."_extra"} },
             })
         else
             SMODS[v and v.set or "Joker"]:take_ownership(k,{},true)
@@ -227,11 +226,21 @@ else
                     k .. ".png",
                     v.px or 71,
                     v.py or 95,
-                    "asset_atli",
-                    v.frames
+                    "asset_atli"
                 ):register()
                 SMODS.Jokers[k].atlas = k
                 SMODS.Jokers[k].pos = { x = 0, y = 0 }
+                if v.extra then
+                    SMODS.Sprite:new(
+                        k .. "_extra",
+                        SMODS.findModByID('Aura').path,
+                        k .. "_extra.png",
+                        v.px or 71,
+                        v.py or 95,
+                        "asset_atli"
+                    ):register()
+                    SMODS.Jokers[k].pos.extra = { x = 0, y = 0, atlas = k .. "_extra"}
+                end
             end end
         end
     end
@@ -333,9 +342,9 @@ end
 local css = Card.set_sprites
 function Card:set_sprites(c, f)
     css(self, c,f)
-    if self.config.center and self.config.center.extra_atlas then
+    if self.config.center and self.config.center.pos and self.config.center.pos.extra and self.config.center.pos.extra.atlas then
         if not self.children.center2 then
-            self.children.center2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.extra_atlas], self.config.center.pos.extra)
+            self.children.center2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.pos.extra.atlas], self.config.center.pos.extra)
             self.children.center2.role.draw_major = self
             self.children.center2.states.hover.can = false
             self.children.center2.states.click.can = false
@@ -346,7 +355,7 @@ function Card:set_sprites(c, f)
 end
 local cd = Card.draw
 function Card:draw(layer)
-    if self.config and self.config.center and self.config.center.extra_atlas then self:set_sprites() end
+    if self.config and self.config.center and self.config.center.pos and self.config.center.pos.extra and self.config.center.pos.extra.atlas then self:set_sprites() end
     cd(self,layer)
 end
 

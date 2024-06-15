@@ -32,6 +32,30 @@ match_indent = true
 [[patches]]
 [patches.pattern]
 target = "card.lua"
+pattern = "self.children.center:draw_shader('foil', nil, self.ARGS.send_to_shader)"
+position = "after"
+payload = "if self.children.center2 then self.children.center2:draw_shader('foil', nil, self.ARGS.send_to_shader, nil, self.children.center) end"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "self.children.center:draw_shader('holo', nil, self.ARGS.send_to_shader)"
+position = "after"
+payload = "if self.children.center2 then self.children.center2:draw_shader('holo', nil, self.ARGS.send_to_shader, nil, self.children.center) end"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "self.children.center:draw_shader('polychrome', nil, self.ARGS.send_to_shader)"
+position = "after"
+payload = "if self.children.center2 then self.children.center2:draw_shader('polychrome', nil, self.ARGS.send_to_shader, nil, self.children.center) end"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
 pattern = "self.children.center:draw_shader('dissolve')"
 position = "after"
 payload = "if self.children.center2 then self.children.center2:draw_shader('dissolve', nil, nil, nil, self.children.center) end"
