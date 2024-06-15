@@ -109,7 +109,7 @@ AnimatedJokers = {
     j_ramen = {},
     j_walkie_talkie = {},
     j_selzer = {},
-    j_castle = { frames_per_row = 9, frames = 69, extra = { frames_per_row = 5, frames = 5, fps = 5, start_frame = 0 } },
+    j_castle = { frames_per_row = 9, frames = 69, start_frame = 0, extra = { frames_per_row = 5, frames = 5, fps = 5, start_frame = 0 } },
     j_smiley = {},
     j_campfire = {},
     j_ticket = {},
@@ -365,6 +365,8 @@ function Aura.castle_suit_num(suit)
     if (suit == "Hearts") then return 5 end
     if (suit == "Clubs") then return 10 end
     if (suit == "Diamonds") then return 15 end
+    if (suit == "Moons") then return 25 end
+    if (suit == "Stars") then return 30 end
     return 20
 end
 local rcc = reset_castle_card
@@ -375,6 +377,19 @@ function reset_castle_card(dont_reset)
     AnimatedJokers.j_castle.extra.frames = anim_offset+5
     AnimatedJokers.j_castle.extra.start_frame = anim_offset
     G.P_CENTERS["j_castle"].pos.extra.y = anim_offset/5
+    if (new_suit == "Moons" or new_suit == "Stars") then
+        if AnimatedJokers.j_castle.start_frame == 0 then
+            AnimatedJokers.j_castle.start_frame = 72
+            AnimatedJokers.j_castle.frames = 94
+            G.P_CENTERS["j_castle"].pos.y = 8
+        end
+    else
+        if AnimatedJokers.j_castle.start_frame == 72 then
+            AnimatedJokers.j_castle.start_frame = 0
+            AnimatedJokers.j_castle.frames = 69
+            G.P_CENTERS["j_castle"].pos.y = 0
+        end
+    end
 end
 local gsr = Game.start_run
 function Game:start_run(args)
