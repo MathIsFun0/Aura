@@ -109,7 +109,7 @@ AnimatedJokers = {
     j_ramen = {},
     j_walkie_talkie = {},
     j_selzer = {},
-    j_castle = { frames = 69, extra = { frames_per_row = 5, frames = 5, fps = 5, start_frame = 0 } },
+    j_castle = { frames_per_row = 9, frames = 69, extra = { frames_per_row = 5, frames = 5, fps = 5, start_frame = 0 } },
     j_smiley = {},
     j_campfire = {},
     j_ticket = {},
