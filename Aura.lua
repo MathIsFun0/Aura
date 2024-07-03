@@ -176,7 +176,7 @@ function Aura.add_individual(card)
     end
 end
 
-if not SMODS["INIT"] then
+if SMODS.Atlas then
     --Register all Jokers/Sprites
     for i = 1, 150 do
         local k = G.P_CENTER_POOLS.Joker[i].key
