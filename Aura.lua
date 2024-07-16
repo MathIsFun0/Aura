@@ -343,13 +343,15 @@ local css = Card.set_sprites
 function Card:set_sprites(c, f)
     css(self, c,f)
     if self.config.center and self.config.center.pos and self.config.center.pos.extra and self.config.center.pos.extra.atlas then
-        if not self.children.center2 then
-            self.children.center2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.pos.extra.atlas], self.config.center.pos.extra)
-            self.children.center2.role.draw_major = self
-            self.children.center2.states.hover.can = false
-            self.children.center2.states.click.can = false
+        if not self.children.front then
+            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.pos.extra.atlas], self.config.card.pos)
+            self.children.front.states.hover = self.states.hover
+            self.children.front.states.click = self.states.click
+            self.children.front.states.drag = self.states.drag
+            self.children.front.states.collide.can = false
+            self.children.front:set_role({major = self, role_type = 'Glued', draw_major = self})
         else
-            self.children.center2:set_sprite_pos(self.config.center.pos.extra)
+            self.children.front:set_sprite_pos(self.config.center.pos.extra)
         end
     end
 end
