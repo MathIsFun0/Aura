@@ -4,7 +4,7 @@
 --- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.014
+--- VERSION: 0.017
 
 AnimatedJokers = {
     j_joker = {},
@@ -60,7 +60,7 @@ AnimatedJokers = {
     j_dna = {},
     j_splash = {},
     j_blue_joker = {},
-    j_sixth_sense = {},
+    j_sixth_sense = { frames = 13, extra = { frames = 20 } }, --todo: card destroy animation
     j_constellation = {},
     j_hiker = {},
     j_faceless = { frames_per_row = 4, frames = 24 },
@@ -84,7 +84,7 @@ AnimatedJokers = {
     j_obelisk = {},
     j_midas_mask = {},
     j_luchador = {},
-    j_photograph = {},
+    j_photograph = { frames = 48 },
     j_gift = {},
     j_turtle_bean = {},
     j_erosion = {},
@@ -129,7 +129,7 @@ AnimatedJokers = {
     j_glass = {},
     j_ring_master = {},
     j_flower_pot = { frames = 24 },
-    j_blueprint = {},
+    j_blueprint = { frames_per_row = 8, frames = 44, individual = true },
     j_wee = {},
     j_merry_andy = {},
     j_oops = {},
@@ -327,12 +327,16 @@ function Node:set_offset(x,y)
         Aura.add_individual(self)
         self.animation = {target = 5}
     end
+    if y == "Click" and self.config and self.config.center_key == 'j_blueprint' and (G.shop_jokers and self.area ~= G.shop_jokers or true) then
+        Aura.add_individual(self)
+        self.animation = {target = 16}
+    end
 end
 
 local crl = Node.stop_drag
 function Node:stop_drag()
     crl(self)
-    if self.config and self.config.center_key == 'j_brainstorm' then
+    if self.config and (self.config.center_key == 'j_brainstorm' or self.config.center_key == 'j_blueprint') then
         Aura.add_individual(self)
         self.animation = {target = 0}
     end
