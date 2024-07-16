@@ -1,10 +1,10 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Aura
 --- MOD_ID: Aura
---- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard (pearl), Grassy, RattlingSnow353]
+--- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.012
+--- VERSION: 0.014
 
 AnimatedJokers = {
     j_joker = {},
@@ -66,7 +66,7 @@ AnimatedJokers = {
     j_faceless = { frames_per_row = 4, frames = 24 },
     j_green_joker = {},
     j_superposition = {},
-    j_todo_list = {},
+    j_todo_list = { frames_per_row = 12, frames = 96 }, --todo: animate on trigger
     j_cavendish = {},
     j_card_sharp = {},
     j_red_card = { frames_per_row = 19, frames = 349 },
@@ -104,7 +104,7 @@ AnimatedJokers = {
     j_trading = {},
     j_flash = {},
     j_popcorn = {},
-    j_trousers = {},
+    j_trousers = { frames = 48 },
     j_ancient = {},
     j_ramen = {},
     j_walkie_talkie = {},
@@ -176,7 +176,7 @@ function Aura.add_individual(card)
     end
 end
 
-if not SMODS["INIT"] then
+if SMODS.Atlas then
     --Register all Jokers/Sprites
     for i = 1, 150 do
         local k = G.P_CENTER_POOLS.Joker[i].key
