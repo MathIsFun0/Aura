@@ -7,7 +7,7 @@
 --- VERSION: 0.017
 
 AnimatedJokers = {
-    j_joker = {},
+    j_joker = { frames_per_row = 11, frames = 22 },
     j_greedy_joker = { frames = 12 },
     j_lusty_joker = { frames_per_row = 5, frames = 20 },
     j_wrathful_joker = { frames_per_row = 1, frames = 18 },
@@ -47,7 +47,7 @@ AnimatedJokers = {
     j_gros_michel = {},
     j_even_steven = {},
     j_odd_todd = {},
-    j_scholar = {},
+    j_scholar = { frames_per_row = 9, frames = 45 },
     j_business = {},
     j_supernova = {},
     j_ride_the_bus = {},
@@ -61,7 +61,7 @@ AnimatedJokers = {
     j_splash = {},
     j_blue_joker = {},
     j_sixth_sense = { frames = 13, extra = { frames = 20 } }, --todo: card destroy animation
-    j_constellation = {},
+    j_constellation = { frames_per_row = 6, frames = 60},
     j_hiker = {},
     j_faceless = { frames_per_row = 4, frames = 24 },
     j_green_joker = {},
@@ -90,7 +90,7 @@ AnimatedJokers = {
     j_erosion = {},
     j_reserved_parking = {},
     j_mail = {},
-    j_to_the_moon = {},
+    j_to_the_moon = { frames_per_row = 10, frames = 50},
     j_hallucination = {},
     j_fortune_teller = {},
     j_juggler = {},
