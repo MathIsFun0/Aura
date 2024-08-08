@@ -4,7 +4,7 @@
 --- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.021
+--- VERSION: 0.022
 
 AnimatedJokers = {
     j_joker = { frames_per_row = 11, frames = 22 },
@@ -54,7 +54,7 @@ AnimatedJokers = {
     j_space = {},
     j_egg = {},
     j_burglar = {},
-    j_blackboard = {},
+    j_blackboard = { frames_per_row = 9, frames = 59, individual = true },
     j_runner = {},
     j_ice_cream = {},
     j_dna = {},
@@ -402,6 +402,36 @@ function Game:start_run(args)
     --don't mess up on save load
     gsr(self,args)
     reset_castle_card(true)
+end
+
+--On trigger effects
+local cj = Card.calculate_joker
+function Card:calculate_joker(context)
+    local ret1, ret2 = cj(self, context)
+
+    --Blackboard
+    if self.ability.name == "Blackboard" and context.cardarea == G.jokers and context.joker_main then
+        local black_suits, all_cards = 0, 0
+        for k, v in ipairs(G.hand.cards) do
+            all_cards = all_cards + 1
+            if v:is_suit('Clubs', nil, true) or v:is_suit('Spades', nil, true) then
+                black_suits = black_suits + 1
+            end
+        end
+        if black_suits == all_cards then
+            --triggered
+            G.E_MANAGER:add_event(Event({
+                func = (function()
+                    Aura.add_individual(self)
+                    self.animation = {target = 0}
+                    self.config.center.pos.x = 1 --start on second frame
+                    return true
+                end)
+            }))
+        end
+    end
+
+    return ret1, ret2
 end
 
 --There's a bug with this function in 0.9.8 that screws up the joker pool
