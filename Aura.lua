@@ -4,7 +4,7 @@
 --- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
---- VERSION: 0.022
+--- VERSION: 0.023
 
 AnimatedJokers = {
     j_joker = { frames_per_row = 11, frames = 22 },
@@ -102,7 +102,7 @@ AnimatedJokers = {
     j_bull = {},
     j_diet_cola = {},
     j_trading = {},
-    j_flash = {},
+    j_flash = { frames_per_row = 13, frames = 26, individual = true, immediate = true },
     j_popcorn = {},
     j_trousers = { frames = 48 },
     j_ancient = {},
@@ -292,6 +292,9 @@ function Aura.update_frame(dt, k, obj, jkr)
             local loc = obj.pos.y*(anim.frames_per_row or anim.frames)+obj.pos.x
             if (not anim.individual) or (jkr and jkr.animation.target and loc ~= jkr.animation.target) then
                 loc = loc + 1
+                if anim.immediate and jkr and jkr.animation.target then
+                    loc = jkr.animation.target
+                end
             end
             if loc >= anim.frames then loc = anim.start_frame or 0 end
             obj.pos.x = loc%(anim.frames_per_row or anim.frames)
@@ -301,6 +304,9 @@ function Aura.update_frame(dt, k, obj, jkr)
             local loc = obj.pos.extra.y*(anim.extra.frames_per_row or anim.extra.frames)+obj.pos.extra.x
             if (not anim.individual) or (jkr and jkr.animation.extra and jkr.animation.extra.target and loc ~= jkr.animation.extra.target) then
                 loc = loc + 1
+                if anim.extra.immediate and jkr and jkr.animation.extra and jkr.animation.extra.target then
+                    loc = jkr.animation.extra.target
+                end
             end
             if loc >= anim.extra.frames then loc = anim.extra.start_frame or 0 end
             obj.pos.extra.x = loc%(anim.extra.frames_per_row or anim.extra.frames)
@@ -339,6 +345,25 @@ function Node:stop_drag()
     if self.config and (self.config.center_key == 'j_brainstorm' or self.config.center_key == 'j_blueprint') then
         Aura.add_individual(self)
         self.animation = {target = 0}
+    end
+end
+
+--On Creation Effects
+local ci = Card.init
+function Card:init(x,y,w,h,card,center,params)
+    ci(self,x,y,w,h,card,center,params)
+    if self.config.center_key == 'j_flash' then
+        if not self.animation then
+            Aura.add_individual(self)
+            local anim_order = {}
+            for i = 1, 26 do
+                anim_order[i] = i-1
+            end
+            pseudoshuffle(anim_order, pseudoseed("aura_flash"))
+            self.animation = {target = anim_order[1], config = {index = 1, order = anim_order}}
+            --instantly update animation
+            Aura.update_frame(0, self.config.center_key, self.config.center, self)
+        end
     end
 end
 
@@ -407,6 +432,18 @@ end
 --On trigger effects
 local cj = Card.calculate_joker
 function Card:calculate_joker(context)
+    --Flash Card (pre-calculation)
+    if self.ability.name == "Flash Card" and context.reroll_shop and not context.blueprint then
+        G.E_MANAGER:add_event(Event({
+            func = (function()
+                self:flip()
+                play_sound('card1')
+                return true
+            end)
+        }))
+    end
+
+
     local ret1, ret2 = cj(self, context)
 
     --Blackboard
@@ -429,6 +466,26 @@ function Card:calculate_joker(context)
                 end)
             }))
         end
+    end
+    --Flash Card
+    if self.ability.name == "Flash Card" and context.reroll_shop and not context.blueprint then
+        G.E_MANAGER:add_event(Event({
+            func = (function()
+                self.animation.config.index = self.animation.config.index + 1
+                if self.animation.config.index > 26 then self.animation.config.index = 1 end
+                self.animation.target = self.animation.config.order[self.animation.config.index]
+                self:juice_up(0.3, 0.3)
+                return true
+            end)
+        }))
+        delay(0.075*G.SETTINGS.GAMESPEED)
+        G.E_MANAGER:add_event(Event({
+            func = (function()
+                self:flip()
+                play_sound('tarot2', 1, 0.6)
+                return true
+            end)
+        }))
     end
 
     return ret1, ret2

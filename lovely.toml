@@ -19,3 +19,30 @@ pattern = "r_tally = r_tally + 1"
 position = "after"
 payload = "end"
 match_indent = true
+
+# Prevent issues with using pseudoshuffle on non-table values
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "if list[1] and list[1].sort_id then"
+position = "at"
+payload = "if list[1] and type(list[1]) == 'table' and list[1].sort_id then"
+match_indent = true
+
+# Save and load individual animation status
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "sort_id = self.sort_id,"
+position = "after"
+payload = "animation = self.animation,"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "self.sort_id = cardTable.sort_id"
+position = "after"
+payload = '''self.animation = cardTable.animation
+if cardTable.animation then Aura.add_individual(self) end'''
+match_indent = true
