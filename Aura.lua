@@ -360,6 +360,12 @@ function Card:init(x,y,w,h,card,center,params)
                 anim_order[i] = i-1
             end
             pseudoshuffle(anim_order, pseudoseed("aura_flash"))
+            --force J to be first
+            for i = 1, 26 do
+                if anim_order[i] == 9 then
+                    anim_order[1], anim_order[i] = anim_order[i], anim_order[1]
+                end
+            end
             self.animation = {target = anim_order[1], config = {index = 1, order = anim_order}}
             --instantly update animation
             Aura.update_frame(0, self.config.center_key, self.config.center, self)
