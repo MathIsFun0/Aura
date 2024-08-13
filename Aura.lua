@@ -379,7 +379,7 @@ function Card:set_sprites(c, f)
     css(self, c,f)
     if self.config.center and self.config.center.pos and self.config.center.pos.extra and self.config.center.pos.extra.atlas then
         if not self.children.front then
-            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.pos.extra.atlas], self.config.card.pos)
+            self.children.front = Sprite(self.T.x, self.T.y, self.T.w, self.T.h, G.ASSET_ATLAS[self.config.center.pos.extra.atlas], self.config.center.pos)
             self.children.front.states.hover = self.states.hover
             self.children.front.states.click = self.states.click
             self.children.front.states.drag = self.states.drag
