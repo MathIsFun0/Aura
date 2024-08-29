@@ -71,7 +71,7 @@ AnimatedJokers = {
     j_card_sharp = {},
     j_red_card = { frames_per_row = 19, frames = 349 },
     j_madness = {},
-    j_square = {},
+    j_square = { frames_per_row = 11, frames = 22 },
     j_seance = {},
     j_riff_raff = {},
     j_vampire = {},
