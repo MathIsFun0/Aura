@@ -149,7 +149,7 @@ AnimatedJokers = {
     j_shoot_the_moon = {},
     j_drivers_license = {},
     j_cartomancer = {},
-    j_astronomer = {},
+    j_astronomer = {frames = 29},
     j_burnt = {},
     j_bootstraps = {},
     j_caino = {},
