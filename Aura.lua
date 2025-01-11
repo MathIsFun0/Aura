@@ -1,7 +1,7 @@
 --- STEAMODDED HEADER
 --- MOD_NAME: Aura
 --- MOD_ID: Aura
---- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils]
+--- MOD_AUTHOR: [MathIsFun_, ChromaPIE, Bard, Grassy311, RattlingSnow353, Solace, RadicaAprils, chloe_cromslor]
 --- MOD_DESCRIPTION: Adds animations to Jokers.
 --- BADGE_COLOUR: 3469ab
 --- VERSION: 0.023
@@ -34,7 +34,7 @@ AnimatedJokers = {
     j_loyalty_cfard = {},
     j_8_ball = {},
     j_misprint = {},
-    j_dusk = {},
+    j_dusk = { frames_per_row = 13, frames = 78, fps = 5 },
     j_raised_fist = { frames_per_row = 4, frames = 14 },
     j_chaos = {},
     j_fibonacci = {},
@@ -66,14 +66,14 @@ AnimatedJokers = {
     j_faceless = { frames_per_row = 4, frames = 24 },
     j_green_joker = {},
     j_superposition = {},
-    j_todo_list = { frames_per_row = 12, frames = 96 }, --todo: animate on trigger
+    j_todo_list = { frames_per_row = 12, frames = 96}, --todo: animate on trigger
     j_cavendish = {},
     j_card_sharp = {},
     j_red_card = { frames_per_row = 19, frames = 349 },
     j_madness = {},
     j_square = { frames_per_row = 11, frames = 22 },
     j_seance = {},
-    j_riff_raff = {},
+    j_riff_raff = { frames_per_row = 14, frames = 490 },
     j_vampire = {},
     j_shortcut = {},
     j_hologram = {},
@@ -130,7 +130,7 @@ AnimatedJokers = {
     j_ring_master = {},
     j_flower_pot = { frames = 24 },
     j_blueprint = { frames_per_row = 8, frames = 44, individual = true },
-    j_wee = {},
+    j_wee = { frames_per_row = 11, frames = 22 },
     j_merry_andy = {},
     j_oops = {},
     j_idol = {},
